@@ -1,44 +1,52 @@
 import json
 
+
 def load_data(file_path):
-    """loads a JSON-file and returns the information"""
+    """Loads a JSON-file and returns the information."""
     with open(file_path, "r", encoding="utf-8") as handle:
         return json.load(handle)
 
-# 1. load the file
-animals_data = load_data("animals_data.json")
 
-# 2. Generate HTML-Cards with final cards
-output = ""
-for animal in animals_data:
-    name = animal.get("name")
-    diet = animal.get("characteristics", {}).get("diet")
-    locations = animal.get("locations", [])
-    type_ = animal.get("characteristics", {}).get("type")
+def serialize_animal(animal_obj):
+    """ creates HTML for one animal object. """
+    name = animal_obj.get("name")
+    diet = animal_obj.get("characteristics", {}).get("diet")
+    locations = animal_obj.get("locations", [])
+    type_ = animal_obj.get("characteristics", {}).get("type")
 
-    output += '<li class="cards__item">\n'
+    html = '<li class="cards__item">\n'
     if name:
-        output += f'  <div class="card__title">{name}</div>\n'
-    output += '  <p class="card__text">\n'
+        html += f'  <div class="card__title">{name}</div>\n'
+    html += '  <p class="card__text">\n'
     if diet:
-        output += f'    <strong>Diet:</strong> {diet}<br/>\n'
+        html += f'    <strong>Diet:</strong> {diet}<br/>\n'
     if locations:
-        output += f'    <strong>Location:</strong> {locations[0]}<br/>\n'
+        html += f'    <strong>Location:</strong> {locations[0]}<br/>\n'
     if type_:
-        output += f'    <strong>Type:</strong> {type_}<br/>\n'
-    output += '  </p>\n'
-    output += '</li>\n'
+        html += f'    <strong>Type:</strong> {type_}<br/>\n'
+    html += '  </p>\n'
+    html += '</li>\n'
+    return html
 
-# 3. load HTML-Template
-with open("animals_template.html", "r", encoding="utf-8") as f:
-    template = f.read()
 
-# 4. replace placeholder
-final_html = template.replace("__REPLACE_ANIMALS_INFO__", output)
+def generate_html(data, template_path, output_path):
+    """Creates the final HTML-file with animal cards."""
+    with open(template_path, "r", encoding="utf-8") as f:
+        template = f.read()
 
-# 5. write new HTML-file
-with open("animals.html", "w", encoding="utf-8") as f:
-    f.write(final_html)
+    cards_html = "".join(serialize_animal(animal) for animal in data)
+    final_html = template.replace("__REPLACE_ANIMALS_INFO__", cards_html)
 
-print("🎉 animals.html generated successfully!")
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(final_html)
+
+
+def main():
+    animals_data = load_data("animals_data.json")
+    generate_html(animals_data, "animals_template.html", "animals.html")
+    print("🎉 animals.html wurde erfolgreich erstellt!")
+
+
+if __name__ == "__main__":
+    main()
 
