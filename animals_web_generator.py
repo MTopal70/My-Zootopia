@@ -7,8 +7,18 @@ def load_data(file_path):
         return json.load(handle)
 
 
+def get_available_skin_types(data):
+    """returns a sorted list with all the available skin types."""
+    skin_types = set()
+    for animal in data:
+        skin = animal.get("characteristics", {}).get("skin_type")
+        if skin:
+            skin_types.add(skin)
+    return sorted(skin_types)
+
+
 def serialize_animal(animal_obj):
-    """ creates HTML for one animal object. """
+    """creates a HTML for each animal object"""
     name = animal_obj.get("name")
     taxonomy = animal_obj.get("taxonomy", {})
     characteristics = animal_obj.get("characteristics", {})
@@ -30,6 +40,8 @@ def serialize_animal(animal_obj):
         html += f'      <li class="card__detail"><strong>Scientific Name:</strong> {taxonomy["scientific_name"]}</li>\n'
     if characteristics.get("lifespan"):
         html += f'      <li class="card__detail"><strong>Lifespan:</strong> {characteristics["lifespan"]}</li>\n'
+    if characteristics.get("skin_type"):
+        html += f'      <li class="card__detail"><strong>Skin Type:</strong> {characteristics["skin_type"]}</li>\n'
     if characteristics.get("slogan"):
         html += f'      <li class="card__detail"><em>{characteristics["slogan"]}</em></li>\n'
 
@@ -40,7 +52,7 @@ def serialize_animal(animal_obj):
 
 
 def generate_html(data, template_path, output_path):
-    """Creates the final HTML-file with animal cards."""
+    """creates the final HTML file with all the animal cards."""
     with open(template_path, "r", encoding="utf-8") as f:
         template = f.read()
 
@@ -53,8 +65,25 @@ def generate_html(data, template_path, output_path):
 
 def main():
     animals_data = load_data("animals_data.json")
-    generate_html(animals_data, "animals_template.html", "animals.html")
-    print("🎉 animals.html wurde erfolgreich erstellt!")
+    skin_types = get_available_skin_types(animals_data)
+
+    print("Available Skin Types:")
+    for skin in skin_types:
+        print(f"- {skin}")
+
+    selected = input("\nPlease enter a Skin Type : ").strip()
+
+    # filter animals
+    filtered_animals = [
+        animal for animal in animals_data
+        if animal.get("characteristics", {}).get("skin_type") == selected
+    ]
+
+    if not filtered_animals:
+        print(f"No animals with Skin Type '{selected}' found.")
+    else:
+        generate_html(filtered_animals, "animals_template.html", "animals.html")
+        print(f"Created animals.html with Skin Type '{selected}' successfully.!")
 
 
 if __name__ == "__main__":
