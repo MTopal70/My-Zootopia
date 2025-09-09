@@ -1,14 +1,15 @@
 import json
 
 def load_data(file_path):
-    """Load a JSON-File and returns the information"""
+    """loads a JSON-file and returns the information"""
     with open(file_path, "r", encoding="utf-8") as handle:
         return json.load(handle)
 
-# Load the file
+# 1. load the file
 animals_data = load_data("animals_data.json")
 
-# Iterate trough the animals json file and print the informations
+# 2. generates the animals information as text
+output = ""
 for animal in animals_data:
     name = animal.get("name")
     diet = animal.get("characteristics", {}).get("diet")
@@ -16,11 +17,25 @@ for animal in animals_data:
     type_ = animal.get("characteristics", {}).get("type")
 
     if name:
-        print(f"Name: {name}")
+        output += f"Name: {name}\n"
     if diet:
-        print(f"Diet: {diet}")
+        output += f"Diet: {diet}\n"
     if locations:
-        print(f"Location: {locations[0]}")
+        output += f"Location: {locations[0]}\n"
     if type_:
-        print(f"Type: {type_}")
-    print()  # white space between the animals
+        output += f"Type: {type_}\n"
+    output += "\n"  # Whitespace between the animals
+
+# 3. load the HTML-Template
+with open("animals_template.html", "r", encoding="utf-8") as f:
+    template = f.read()
+
+# 4. replace the placeholder
+final_html = template.replace("__REPLACE_ANIMALS_INFO__", output)
+
+# 5. write the new HTML file
+with open("animals.html", "w", encoding="utf-8") as f:
+    f.write(final_html)
+
+print("✅ animals.html generated successfully!")
+
