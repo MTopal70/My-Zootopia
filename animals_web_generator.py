@@ -8,7 +8,7 @@ def load_data(file_path):
 # 1. load the file
 animals_data = load_data("animals_data.json")
 
-# 2. Generate HTML-Cards
+# 2. Generate HTML-Cards with final cards
 output = ""
 for animal in animals_data:
     name = animal.get("name")
@@ -18,25 +18,27 @@ for animal in animals_data:
 
     output += '<li class="cards__item">\n'
     if name:
-        output += f"Name: {name}<br/>\n"
+        output += f'  <div class="card__title">{name}</div>\n'
+    output += '  <p class="card__text">\n'
     if diet:
-        output += f"Diet: {diet}<br/>\n"
+        output += f'    <strong>Diet:</strong> {diet}<br/>\n'
     if locations:
-        output += f"Location: {locations[0]}<br/>\n"
+        output += f'    <strong>Location:</strong> {locations[0]}<br/>\n'
     if type_:
-        output += f"Type: {type_}<br/>\n"
+        output += f'    <strong>Type:</strong> {type_}<br/>\n'
+    output += '  </p>\n'
     output += '</li>\n'
 
-# 3. Load HTML-Template
+# 3. load HTML-Template
 with open("animals_template.html", "r", encoding="utf-8") as f:
     template = f.read()
 
 # 4. replace placeholder
 final_html = template.replace("__REPLACE_ANIMALS_INFO__", output)
 
-# 5. write the new HTML file
+# 5. write new HTML-file
 with open("animals.html", "w", encoding="utf-8") as f:
     f.write(final_html)
 
-print("✅ HTML-Cards generated successfully!")
+print("🎉 animals.html generated successfully!")
 
