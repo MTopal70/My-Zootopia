@@ -17,26 +17,24 @@ def serialize_animal(animal_obj):
     html = '<li class="cards__item">\n'
     if name:
         html += f'  <div class="card__title">{name}</div>\n'
-    html += '  <p class="card__text">\n'
+    html += '  <div class="card__text">\n'
+    html += '    <ul class="card__details">\n'
 
     if characteristics.get("diet"):
-        html += f'    <strong>Diet:</strong> {characteristics["diet"]}<br/>\n'
+        html += f'      <li class="card__detail"><strong>Diet:</strong> {characteristics["diet"]}</li>\n'
     if locations:
-        html += f'    <strong>Location:</strong> {locations[0]}<br/>\n'
+        html += f'      <li class="card__detail"><strong>Location:</strong> {locations[0]}</li>\n'
     if characteristics.get("type"):
-        html += f'    <strong>Type:</strong> {characteristics["type"]}<br/>\n'
+        html += f'      <li class="card__detail"><strong>Type:</strong> {characteristics["type"]}</li>\n'
     if taxonomy.get("scientific_name"):
-        html += f'    <strong>Scientific Name:</strong> {taxonomy["scientific_name"]}<br/>\n'
+        html += f'      <li class="card__detail"><strong>Scientific Name:</strong> {taxonomy["scientific_name"]}</li>\n'
     if characteristics.get("lifespan"):
-        html += f'    <strong>Lifespan:</strong> {characteristics["lifespan"]}<br/>\n'
-    if characteristics.get("skin_type"):
-        html += f'    <strong>Skin Type:</strong> {characteristics["skin_type"]}<br/>\n'
-    if characteristics.get("top_speed"):
-        html += f'    <strong>Top Speed:</strong> {characteristics["top_speed"]}<br/>\n'
+        html += f'      <li class="card__detail"><strong>Lifespan:</strong> {characteristics["lifespan"]}</li>\n'
     if characteristics.get("slogan"):
-        html += f'    <em>{characteristics["slogan"]}</em><br/>\n'
+        html += f'      <li class="card__detail"><em>{characteristics["slogan"]}</em></li>\n'
 
-    html += '  </p>\n'
+    html += '    </ul>\n'
+    html += '  </div>\n'
     html += '</li>\n'
     return html
 
